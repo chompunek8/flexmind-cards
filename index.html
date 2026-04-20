@@ -3,116 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <title>FlexMind Cards</title>
-
+  <p>ไม่มีคำตอบที่ผิด ทุกความรู้สึกมีความหมาย</p>
+  <p>เลือกไพ่ 5 ใบ → เลือก 1 ใบที่กระทบใจที่สุด → สะท้อนตัวเอง</p>
+  
 <style>
-body {
-  font-family: sans-serif;
-  background: #f7f5f2;
-  text-align: center;
-  padding: 20px;
-}
-
-#app { max-width: 900px; margin: auto; }
-
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.card {
-  width: 265px;
-  height: 454px;
-  margin: 6px;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  transition: .2s;
-}
-
-.card:hover { transform: translateY(-5px); }
-
-.card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.selected {
-  border: 3px solid #6c9a8b;
-  transform: scale(1.05);
-}
-
-button {
-  padding: 10px 20px;
-  border-radius: 20px;
-  border: none;
-  background: #6c9a8b;
-  color: white;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-input, textarea {
-  width: 80%;
-  margin: 10px;
-  padding: 10px;
-}
+body { font-family:sans-serif; background:#f7f5f2; text-align:center; }
+.cards { display:flex; flex-wrap:wrap; justify-content:center; }
+.card { width:100px; height:140px; margin:6px; cursor:pointer; }
+.card img { width:100%; height:100%; object-fit:cover; }
+.selected { border:3px solid green; }
+button { margin-top:20px; padding:10px 20px; }
 </style>
-
 </head>
+
 <body>
 
-<div id="app">
+<h1>FlexMind Cards</h1>
 
-<!-- WELCOME -->
-<div id="welcome">
-  <h1>FlexMind Cards</h1>
-  <p>ไม่มีคำตอบที่ผิด ทุกความรู้สึกมีความหมาย</p>
-  <p>เลือกไพ่หมวดละ 5 ใบ → เลือก 1 ใบที่กระทบใจที่สุด → สะท้อนตัวเอง</p>
-  <button onclick="startGame()">เริ่มเล่น</button>
-</div>
+<h2>Acceptance (เลือก 5 ใบ)</h2>
+<div id="acceptance" class="cards"></div>
 
-<!-- GAME -->
-<div id="game" style="display:none;">
-  <h2>Acceptance (เลือก 5 ใบ)</h2>
-  <div id="acceptance" class="cards"></div>
+<h2>Commitment (เลือก 5 ใบ)</h2>
+<div id="commitment" class="cards"></div>
 
-  <h2>Commitment (เลือก 5 ใบ)</h2>
-  <div id="commitment" class="cards"></div>
+<button id="next" style="display:none;" onclick="goNext()">ถัดไป</button>
 
-  <button id="nextBtn" style="display:none;" onclick="goSelect()">ถัดไป</button>
-</div>
-
-<!-- SELECT -->
-<div id="select" style="display:none;">
-  <h2>เลือก 1 ใบที่กระทบใจที่สุด</h2>
-  <div id="selectedCards" class="cards"></div>
-</div>
-
-<!-- INTERVIEW -->
-<div id="interview" style="display:none;">
-  <h2>สะท้อนตัวเอง</h2>
-  <input id="name" placeholder="ชื่อ"><br>
-  <textarea id="q1" placeholder="คุณสังเกตอะไร"></textarea><br>
-  <textarea id="q2" placeholder="คุณจะทำอะไรต่อ"></textarea><br>
-  <button onclick="submitData()">ส่งข้อมูล</button>
-</div>
-
-<!-- THANK -->
-<div id="thank" style="display:none;">
-  <h2>ขอบคุณ</h2>
-</div>
-
+<div id="form" style="display:none;">
+<h2>สะท้อนตัวเอง</h2>
+<input id="name" placeholder="ชื่อ"><br>
+<textarea id="q1" placeholder="คุณเห็นอะไร"></textarea><br>
+<button onclick="send()">ส่ง</button>
 </div>
 
 <script>
 
-// 🔴 ใส่ URL Script ของคุณตรงนี้
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXCTUAngWZLw42hvdvLjjGniU0hWAX5tLajRReCfZ2E-zWljQ7DcmyQ6o_f_sc238z_Q/exec";
+// 🔴 URL Google Script
+const URL = "https://script.google.com/macros/s/AKfycbwXCTUAngWZLw42hvdvLjjGniU0hWAX5tLajRReCfZ2E-zWljQ7DcmyQ6o_f_sc238z_Q/exec";
 
-// ===== DATA =====
+// ✅ ใช้ URL เต็มเท่านั้น
 const A = [
 ["https://i.postimg.cc/GhpPBHQ5/01.jpg","https://i.postimg.cc/8PCdFjHq/02.jpg"],
 ["https://i.postimg.cc/fTb73JK1/03.jpg","https://i.postimg.cc/pXdQ9pZG/04.jpg"],
@@ -149,20 +77,8 @@ const C = [
 ["https://i.postimg.cc/sxHhP4cS/59.jpg","https://i.postimg.cc/RhpH1LRw/60.jpg"]
 ];
 
-const base = "https://i.postimg.cc/";
+let selA=[], selC=[];
 
-let selA=[], selC=[], final="";
-
-// ===== START =====
-function startGame(){
-  document.getElementById("welcome").style.display="none";
-  document.getElementById("game").style.display="block";
-
-  render("acceptance",A,selA);
-  render("commitment",C,selC);
-}
-
-// ===== RENDER =====
 function render(id,data,store){
   const el=document.getElementById(id);
   el.innerHTML="";
@@ -172,20 +88,20 @@ function render(id,data,store){
     div.className="card";
 
     const img=document.createElement("img");
-    img.src=base+pair[0];
+    img.src=pair[0];
 
     let open=false;
 
     div.onclick=()=>{
       if(open || store.length>=5) return;
 
-      img.src=base+pair[1];
+      img.src=pair[1];
       open=true;
-      store.push(base+pair[1]);
+      store.push(pair[1]);
       div.classList.add("selected");
 
       if(selA.length===5 && selC.length===5){
-        document.getElementById("nextBtn").style.display="block";
+        document.getElementById("next").style.display="block";
       }
     };
 
@@ -194,122 +110,8 @@ function render(id,data,store){
   });
 }
 
-// ===== SELECT =====
-function goSelect(){
-  document.getElementById("game").style.display="none";
-  document.getElementById("select").style.display="block";
-
-  const el=document.getElementById("selectedCards");
-  el.innerHTML="";
-
-  [...selA,...selC].forEach(src=>{
-    const img=document.createElement("img");
-    img.src=src;
-    img.className="card";
-
-    img.onclick=()=>{
-      final=src;
-      document.getElementById("select").style.display="none";
-      document.getElementById("interview").style.display="block";
-    };
-
-    el.appendChild(img);
-  });
-}
-
-// ===== SUBMIT =====
-function submitData(){
-
-  const data={
-    name:document.getElementById("name").value,
-    q1:document.getElementById("q1").value,
-    q2:document.getElementById("q2").value,
-    final,
-    A:selA,
-    C:selC
-  };
-
-  fetch(SCRIPT_URL,{
-    method:"POST",
-    mode:"no-cors",
-    body:JSON.stringify(data)
-  });
-
-  document.getElementById("interview").style.display="none";
-  document.getElementById("thank").style.display="block";
-}
-
-</script>
-
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<title>FlexMind Cards</title>
-
-<style>
-body { font-family:sans-serif; text-align:center; background:#f7f5f2; }
-.cards { display:flex; flex-wrap:wrap; justify-content:center; }
-.card { width:100px; height:140px; margin:6px; cursor:pointer; }
-.card img { width:100%; height:100%; object-fit:cover; }
-.selected { border:3px solid green; }
-button { padding:10px 20px; margin-top:20px; }
-</style>
-</head>
-
-<body>
-
-<h1>FlexMind Cards</h1>
-
-<div id="game"></div>
-<div id="form" style="display:none;">
-<input id="name" placeholder="ชื่อ"><br>
-<textarea id="q1" placeholder="คุณเห็นอะไร"></textarea><br>
-<button onclick="send()">ส่ง</button>
-</div>
-
-<script>
-
-// 🔴 URL ของคุณ
-const URL = "https://script.google.com/macros/s/AKfycbwXCTUAngWZLw42hvdvLjjGniU0hWAX5tLajRReCfZ2E-zWljQ7DcmyQ6o_f_sc238z_Q/exec";
-
-// 🔥 ใช้รูปจริงตรง ๆ (ไม่ผ่าน base)
-const cards = [
-["https://i.postimg.cc/GhpPBHQ5/01.jpg","https://i.postimg.cc/8PCdFjHq/02.jpg"],
-["https://i.postimg.cc/fTb73JK1/03.jpg","https://i.postimg.cc/pXdQ9pZG/04.jpg"]
-];
-
-let selected = [];
-
-function start(){
-  const game = document.getElementById("game");
-  game.innerHTML = "";
-
-  cards.forEach(pair=>{
-    const div = document.createElement("div");
-    div.className="card";
-
-    const img = document.createElement("img");
-    img.src = pair[0];
-
-    div.onclick = ()=>{
-      if(selected.length>=1) return;
-
-      img.src = pair[1];
-      selected.push(pair[1]);
-      div.classList.add("selected");
-
-      setTimeout(()=>{
-        document.getElementById("form").style.display="block";
-      },500);
-    };
-
-    div.appendChild(img);
-    game.appendChild(div);
-  });
+function goNext(){
+  document.getElementById("form").style.display="block";
 }
 
 function send(){
@@ -319,14 +121,17 @@ function send(){
     body:JSON.stringify({
       name:document.getElementById("name").value,
       q1:document.getElementById("q1").value,
-      card:selected[0]
+      A:selA,
+      C:selC
     })
   });
 
   alert("ส่งแล้ว");
 }
 
-start();
+// start
+render("acceptance",A,selA);
+render("commitment",C,selC);
 
 </script>
 
