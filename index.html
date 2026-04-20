@@ -220,3 +220,22 @@ function submitData(){
 
 </body>
 </html>
+
+function doPost(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const data = JSON.parse(e.postData.contents);
+
+  sheet.appendRow([
+    new Date(),
+    data.name,
+    data.q1,
+    data.q2,
+    data.finalCard,
+    JSON.stringify(data.acceptance),
+    JSON.stringify(data.commitment)
+  ]);
+
+  return ContentService
+    .createTextOutput(JSON.stringify({status:"success"}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
