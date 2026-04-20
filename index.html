@@ -1,0 +1,205 @@
+<div id="app">
+
+<!-- WELCOME -->
+<div id="welcome">
+  <h1>FlexMind Cards</h1>
+  <p>ไม่มีคำตอบที่ผิด ทุกความรู้สึกมีความหมาย</p>
+  <p>เลือกไพ่ 5 ใบ → เลือก 1 ใบที่กระทบใจที่สุด → สะท้อนตัวเอง</p>
+  <button onclick="startGame()">เริ่มเล่น</button>
+</div>
+
+<!-- GAME -->
+<div id="game" style="display:none;">
+  <h2>Acceptance (เลือก 5 ใบ)</h2>
+  <div id="acceptance"></div>
+
+  <h2>Commitment (เลือก 5 ใบ)</h2>
+  <div id="commitment"></div>
+
+  <button id="goSelect" style="display:none;" onclick="goSelect()">
+    เลือกใบที่กระทบใจที่สุด
+  </button>
+</div>
+
+<!-- SELECT 1 CARD -->
+<div id="selectOne" style="display:none;">
+  <h2>เลือก 1 ใบที่กระทบใจที่สุด</h2>
+  <div id="selectedCards"></div>
+</div>
+
+<!-- INTERVIEW -->
+<div id="interview" style="display:none;">
+  <h2>สะท้อนตัวเอง</h2>
+
+  <input id="name" placeholder="ชื่อ" />
+  <textarea id="q1" placeholder="การ์ดใบนี้สะท้อนอะไรในตัวคุณ"></textarea>
+  <textarea id="q2" placeholder="คุณจะนำไปใช้ในชีวิตจริงอย่างไร"></textarea>
+
+  <button onclick="submitData()">ส่งข้อมูล</button>
+</div>
+
+<!-- THANK YOU -->
+<div id="thankyou" style="display:none;">
+  <h2>ขอบคุณ</h2>
+  <p>คุณได้ก้าวหนึ่งในการเข้าใจตัวเอง</p>
+</div>
+
+</div>
+
+</body {
+  text-align: center;
+  font-family: sans-serif;
+}
+
+#acceptance, #commitment, #selectedCards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  width: 100px;
+  height: 140px;
+  margin: 6px;
+  cursor: pointer;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.selected {
+  border: 3px solid green;
+}>
+
+<script>
+/* JS */
+</// ===== DATA =====
+const acceptancePairs = [
+["https://i.postimg.cc/GhpPBHQ5/01.jpg","https://i.postimg.cc/8PCdFjHq/02.jpg"],
+["https://i.postimg.cc/fTb73JK1/03.jpg","https://i.postimg.cc/pXdQ9pZG/04.jpg"],
+["https://i.postimg.cc/QxMgBHmL/05.jpg","https://i.postimg.cc/651rCtjH/06.jpg"],
+["https://i.postimg.cc/DyYr1njY/07.jpg","https://i.postimg.cc/651rCtjD/08.jpg"],
+["https://i.postimg.cc/CL6GbSrp/09.jpg","https://i.postimg.cc/DyYr1np7/10.jpg"],
+["https://i.postimg.cc/WbfG0TYz/11.jpg","https://i.postimg.cc/BQwT247L/12.jpg"],
+["https://i.postimg.cc/13npH2bR/13.jpg","https://i.postimg.cc/t4Zh5w8J/14.jpg"],
+["https://i.postimg.cc/mgzQwJKP/15.jpg","https://i.postimg.cc/qvh8LSW6/16.jpg"],
+["https://i.postimg.cc/XYGw8mtF/17.jpg","https://i.postimg.cc/kg6xczLN/18.jpg"],
+["https://i.postimg.cc/mgzQwJKS/19.jpg","https://i.postimg.cc/13npH2bM/20.jpg"],
+["https://i.postimg.cc/DwJqgHRx/21.jpg","https://i.postimg.cc/t4KFmDHF/22.jpg"],
+["https://i.postimg.cc/13kDYMZK/23.jpg","https://i.postimg.cc/52h8kpMg/24.jpg"],
+["https://i.postimg.cc/XYR9Dx02/25.jpg","https://i.postimg.cc/fRGYg5hq/26.jpg"],
+["https://i.postimg.cc/pLwK1kHN/27.jpg","https://i.postimg.cc/jSpykvb0/28.jpg"],
+["https://i.postimg.cc/K86tsQ2x/29.jpg","https://i.postimg.cc/TPnn8mRZ/30.jpg"]
+];
+
+const commitmentPairs = [
+["https://i.postimg.cc/hGVVFxDc/31.jpg","https://i.postimg.cc/MG11kR6Z/32.jpg"],
+["https://i.postimg.cc/nLqq87FM/33.jpg","https://i.postimg.cc/N0RRhTs9/34.jpg"],
+["https://i.postimg.cc/5t88cv4C/35.jpg","https://i.postimg.cc/FRm3hRzz/36.jpg"],
+["https://i.postimg.cc/tTyW9TJY/37.jpg","https://i.postimg.cc/26mhC6yL/38.jpg"],
+["https://i.postimg.cc/76D0q6hT/39.jpg","https://i.postimg.cc/MTxVzTH7/40.jpg"],
+["https://i.postimg.cc/FRm3hRzb/41.jpg","https://i.postimg.cc/qR0ypRqL/42.jpg"],
+["https://i.postimg.cc/d1vrJ136/43.jpg","https://i.postimg.cc/HxHXTxn3/44.jpg"],
+["https://i.postimg.cc/4dZVXdy8/45.jpg","https://i.postimg.cc/JnmZRn06/46.jpg"],
+["https://i.postimg.cc/Tw9m165c/47.jpg","https://i.postimg.cc/XJ3dnJqz/48.jpg"],
+["https://i.postimg.cc/pTZ8rH54/49.jpg","https://i.postimg.cc/RFRfhBJs/50.jpg"],
+["https://i.postimg.cc/bJTbrhSK/51.jpg","https://i.postimg.cc/ZRc3nSyS/52.jpg"],
+["https://i.postimg.cc/zvGhRcn8/53.jpg","https://i.postimg.cc/zvGhRcnL/54.jpg"],
+["https://i.postimg.cc/C5x8fQjq/55.jpg","https://i.postimg.cc/2ySWBK4h/56.jpg"],
+["https://i.postimg.cc/C5x8fQjH/57.jpg","https://i.postimg.cc/PJVwbQ4w/58.jpg"],
+["https://i.postimg.cc/sxHhP4cS/59.jpg","https://i.postimg.cc/RhpH1LRw/60.jpg"]
+];
+
+let selectedA = [];
+let selectedC = [];
+let finalCard = "";
+
+// ===== NAV =====
+function startGame(){
+  document.getElementById("welcome").style.display="none";
+  document.getElementById("game").style.display="block";
+}
+
+// ===== RENDER =====
+function renderCards(id, pairs, type){
+  const el = document.getElementById(id);
+
+  pairs.forEach(pair=>{
+    const div=document.createElement("div");
+    div.className="card";
+
+    const img=document.createElement("img");
+    img.src=pair[0];
+
+    let opened=false;
+
+    div.onclick=()=>{
+      if(opened) return;
+
+      if(type==="A" && selectedA.length>=5) return alert("ครบ 5 ใบ");
+      if(type==="C" && selectedC.length>=5) return alert("ครบ 5 ใบ");
+
+      img.src=pair[1];
+      opened=true;
+
+      if(type==="A") selectedA.push(pair[1]);
+      else selectedC.push(pair[1]);
+
+      div.classList.add("selected");
+
+      if(selectedA.length===5 && selectedC.length===5){
+        document.getElementById("goSelect").style.display="block";
+      }
+    };
+
+    div.appendChild(img);
+    el.appendChild(div);
+  });
+}
+
+renderCards("acceptance",acceptancePairs,"A");
+renderCards("commitment",commitmentPairs,"C");
+
+// ===== SELECT 1 =====
+function goSelect(){
+  document.getElementById("game").style.display="none";
+  document.getElementById("selectOne").style.display="block";
+
+  const all=[...selectedA,...selectedC];
+  const el=document.getElementById("selectedCards");
+
+  all.forEach(src=>{
+    const img=document.createElement("img");
+    img.src=src;
+    img.className="card";
+
+    img.onclick=()=>{
+      finalCard=src;
+      document.getElementById("selectOne").style.display="none";
+      document.getElementById("interview").style.display="block";
+    };
+
+    el.appendChild(img);
+  });
+}
+
+// ===== SUBMIT =====
+function submitData(){
+  fetch("https://script.google.com/macros/s/AKfycbziZkTqcrFOofA9F8e1Bj3cnzk8UfcDxpmRaUK2vjgvI-RGEdhcEx8FGYw_AEIClLYMnQ/exec",{
+    method:"POST",
+    body:JSON.stringify({
+      name:document.getElementById("name").value,
+      q1:document.getElementById("q1").value,
+      q2:document.getElementById("q2").value,
+      finalCard,
+      acceptance:selectedA,
+      commitment:selectedC
+    })
+  }).then(()=>{
+    document.getElementById("interview").style.display="none";
+    document.getElementById("thankyou").style.display="block";
+  });
+}>
