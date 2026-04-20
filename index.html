@@ -1,52 +1,11 @@
-<div id="app">
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>FlexMind Cards</title>
 
-<!-- WELCOME -->
-<div id="welcome">
-  <h1>FlexMind Cards</h1>
-  <p>ไม่มีคำตอบที่ผิด ทุกความรู้สึกมีความหมาย</p>
-  <p>เลือกไพ่ 5 ใบ → เลือก 1 ใบที่กระทบใจที่สุด → สะท้อนตัวเอง</p>
-  <button onclick="startGame()">เริ่มเล่น</button>
-</div>
-
-<!-- GAME -->
-<div id="game" style="display:none;">
-  <h2>Acceptance (เลือก 5 ใบ)</h2>
-  <div id="acceptance"></div>
-
-  <h2>Commitment (เลือก 5 ใบ)</h2>
-  <div id="commitment"></div>
-
-  <button id="goSelect" style="display:none;" onclick="goSelect()">
-    เลือกใบที่กระทบใจที่สุด
-  </button>
-</div>
-
-<!-- SELECT 1 CARD -->
-<div id="selectOne" style="display:none;">
-  <h2>เลือก 1 ใบที่กระทบใจที่สุด</h2>
-  <div id="selectedCards"></div>
-</div>
-
-<!-- INTERVIEW -->
-<div id="interview" style="display:none;">
-  <h2>สะท้อนตัวเอง</h2>
-
-  <input id="name" placeholder="ชื่อ" />
-  <textarea id="q1" placeholder="การ์ดใบนี้สะท้อนอะไรในตัวคุณ"></textarea>
-  <textarea id="q2" placeholder="คุณจะนำไปใช้ในชีวิตจริงอย่างไร"></textarea>
-
-  <button onclick="submitData()">ส่งข้อมูล</button>
-</div>
-
-<!-- THANK YOU -->
-<div id="thankyou" style="display:none;">
-  <h2>ขอบคุณ</h2>
-  <p>คุณได้ก้าวหนึ่งในการเข้าใจตัวเอง</p>
-</div>
-
-</div>
-
-</body {
+<style>
+body {
   text-align: center;
   font-family: sans-serif;
 }
@@ -72,11 +31,61 @@
 
 .selected {
   border: 3px solid green;
-}>
+}
+</style>
+
+</head>
+<body>
+
+<div id="app">
+
+<!-- WELCOME -->
+<div id="welcome">
+  <h1>FlexMind Cards</h1>
+  <p>ไม่มีคำตอบที่ผิด ทุกความรู้สึกมีความหมาย</p>
+  <p>เลือกไพ่ 5 ใบ → เลือก 1 ใบที่กระทบใจที่สุด → สะท้อนตัวเอง</p>
+  <button onclick="startGame()">เริ่มเล่น</button>
+</div>
+
+<!-- GAME -->
+<div id="game" style="display:none;">
+  <h2>Acceptance (เลือก 5 ใบ)</h2>
+  <div id="acceptance"></div>
+
+  <h2>Commitment (เลือก 5 ใบ)</h2>
+  <div id="commitment"></div>
+
+  <button id="goSelect" style="display:none;" onclick="goSelect()">
+    เลือกใบที่กระทบใจที่สุด
+  </button>
+</div>
+
+<!-- SELECT -->
+<div id="selectOne" style="display:none;">
+  <h2>เลือก 1 ใบที่กระทบใจที่สุด</h2>
+  <div id="selectedCards"></div>
+</div>
+
+<!-- INTERVIEW -->
+<div id="interview" style="display:none;">
+  <h2>สะท้อนตัวเอง</h2>
+  <input id="name" placeholder="ชื่อ"><br><br>
+  <textarea id="q1" placeholder="การ์ดใบนี้สะท้อนอะไรในตัวคุณ"></textarea><br><br>
+  <textarea id="q2" placeholder="คุณจะนำไปใช้ในชีวิตจริงอย่างไร"></textarea><br><br>
+  <button onclick="submitData()">ส่งข้อมูล</button>
+</div>
+
+<!-- THANK YOU -->
+<div id="thankyou" style="display:none;">
+  <h2>ขอบคุณ</h2>
+  <p>คุณได้ก้าวหนึ่งในการเข้าใจตัวเอง</p>
+</div>
+
+</div>
 
 <script>
-/* JS */
-</// ===== DATA =====
+
+// ===== DATA =====
 const acceptancePairs = [
 ["https://i.postimg.cc/GhpPBHQ5/01.jpg","https://i.postimg.cc/8PCdFjHq/02.jpg"],
 ["https://i.postimg.cc/fTb73JK1/03.jpg","https://i.postimg.cc/pXdQ9pZG/04.jpg"],
@@ -117,22 +126,26 @@ let selectedA = [];
 let selectedC = [];
 let finalCard = "";
 
-// ===== NAV =====
+// ===== START =====
 function startGame(){
   document.getElementById("welcome").style.display="none";
   document.getElementById("game").style.display="block";
+
+  renderCards("acceptance", acceptancePairs, "A");
+  renderCards("commitment", commitmentPairs, "C");
 }
 
 // ===== RENDER =====
 function renderCards(id, pairs, type){
   const el = document.getElementById(id);
+  el.innerHTML = "";
 
   pairs.forEach(pair=>{
-    const div=document.createElement("div");
+    const div = document.createElement("div");
     div.className="card";
 
-    const img=document.createElement("img");
-    img.src=pair[0];
+    const img = document.createElement("img");
+    img.src = pair[0];
 
     let opened=false;
 
@@ -142,7 +155,7 @@ function renderCards(id, pairs, type){
       if(type==="A" && selectedA.length>=5) return alert("ครบ 5 ใบ");
       if(type==="C" && selectedC.length>=5) return alert("ครบ 5 ใบ");
 
-      img.src=pair[1];
+      img.src = pair[1];
       opened=true;
 
       if(type==="A") selectedA.push(pair[1]);
@@ -160,18 +173,15 @@ function renderCards(id, pairs, type){
   });
 }
 
-renderCards("acceptance",acceptancePairs,"A");
-renderCards("commitment",commitmentPairs,"C");
-
-// ===== SELECT 1 =====
+// ===== SELECT =====
 function goSelect(){
   document.getElementById("game").style.display="none";
   document.getElementById("selectOne").style.display="block";
 
-  const all=[...selectedA,...selectedC];
-  const el=document.getElementById("selectedCards");
+  const el = document.getElementById("selectedCards");
+  el.innerHTML = "";
 
-  all.forEach(src=>{
+  [...selectedA, ...selectedC].forEach(src=>{
     const img=document.createElement("img");
     img.src=src;
     img.className="card";
@@ -201,5 +211,12 @@ function submitData(){
   }).then(()=>{
     document.getElementById("interview").style.display="none";
     document.getElementById("thankyou").style.display="block";
+  }).catch(()=>{
+    alert("ส่งข้อมูลไม่สำเร็จ");
   });
-}>
+}
+
+</script>
+
+</body>
+</html>
