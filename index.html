@@ -6,8 +6,16 @@
 
 <style>
 body {
+  font-family: "Prompt", sans-serif;
+  background: #f7f5f2;
+  margin: 0;
+  padding: 20px;
   text-align: center;
-  font-family: sans-serif;
+}
+
+#app {
+  max-width: 900px;
+  margin: auto;
 }
 
 #acceptance, #commitment, #selectedCards {
@@ -20,7 +28,15 @@ body {
   width: 100px;
   height: 140px;
   margin: 6px;
+  border-radius: 12px;
+  overflow: hidden;
   cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+  transform: translateY(-5px);
 }
 
 .card img {
@@ -29,8 +45,26 @@ body {
   object-fit: cover;
 }
 
-.selected {
-  border: 3px solid green;
+.card.selected {
+  transform: scale(1.1);
+  border: 3px solid #6c9a8b;
+}
+
+button {
+  background: #6c9a8b;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 20px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+input, textarea {
+  width: 80%;
+  max-width: 400px;
+  margin: 10px;
+  padding: 10px;
 }
 </style>
 
@@ -42,8 +76,8 @@ body {
 <!-- WELCOME -->
 <div id="welcome">
   <h1>FlexMind Cards</h1>
-  <p>ไม่มีคำตอบที่ผิด ทุกความรู้สึกมีความหมาย</p>
-  <p>เลือกไพ่ 5 ใบ → เลือก 1 ใบที่กระทบใจที่สุด → สะท้อนตัวเอง</p>
+  <p>ลองอยู่กับตัวเองสักครู่ มองดูที่การ์ด</p>
+  <p>เลือกการ์ดทั้ง 2 หมวด หมวดละ 5 ใบ</p>
   <button onclick="startGame()">เริ่มเล่น</button>
 </div>
 
@@ -56,34 +90,36 @@ body {
   <div id="commitment"></div>
 
   <button id="goSelect" style="display:none;" onclick="goSelect()">
-    เลือกใบที่กระทบใจที่สุด
+    เลือกใบที่กระทบต่อใจคุณที่สุด
   </button>
 </div>
 
 <!-- SELECT -->
 <div id="selectOne" style="display:none;">
-  <h2>เลือก 1 ใบที่กระทบใจที่สุด</h2>
+  <h2>เลือก 1 ใบที่กระทบต่อใจคุณที่สุด</h2>
   <div id="selectedCards"></div>
 </div>
 
 <!-- INTERVIEW -->
 <div id="interview" style="display:none;">
   <h2>สะท้อนตัวเอง</h2>
-  <input id="name" placeholder="ชื่อ"><br><br>
-  <textarea id="q1" placeholder="การ์ดใบนี้สะท้อนอะไรในตัวคุณ"></textarea><br><br>
-  <textarea id="q2" placeholder="คุณจะนำไปใช้ในชีวิตจริงอย่างไร"></textarea><br><br>
+  <input id="name" placeholder="ชื่อ"><br>
+  <textarea id="q1" placeholder="คุณสังเกตอะไรในตัวเอง"></textarea><br>
+  <textarea id="q2" placeholder="คุณจะลงมือทำอะไรต่อ"></textarea><br>
   <button onclick="submitData()">ส่งข้อมูล</button>
 </div>
 
 <!-- THANK YOU -->
 <div id="thankyou" style="display:none;">
   <h2>ขอบคุณ</h2>
-  <p>คุณได้ก้าวหนึ่งในการเข้าใจตัวเอง</p>
 </div>
 
 </div>
 
 <script>
+
+// ===== ใส่ URL Google Script ของคุณตรงนี้ =====
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXCTUAngWZLw42hvdvLjjGniU0hWAX5tLajRReCfZ2E-zWljQ7DcmyQ6o_f_sc238z_Q/exec";
 
 // ===== DATA =====
 const acceptancePairs = [
@@ -122,30 +158,26 @@ const commitmentPairs = [
 ["https://i.postimg.cc/sxHhP4cS/59.jpg","https://i.postimg.cc/RhpH1LRw/60.jpg"]
 ];
 
-let selectedA = [];
-let selectedC = [];
-let finalCard = "";
+let selectedA=[], selectedC=[], finalCard="";
 
 // ===== START =====
 function startGame(){
   document.getElementById("welcome").style.display="none";
   document.getElementById("game").style.display="block";
-
-  renderCards("acceptance", acceptancePairs, "A");
-  renderCards("commitment", commitmentPairs, "C");
+  renderCards("acceptance",acceptancePairs,"A");
+  renderCards("commitment",commitmentPairs,"C");
 }
 
 // ===== RENDER =====
-function renderCards(id, pairs, type){
-  const el = document.getElementById(id);
-  el.innerHTML = "";
+function renderCards(id,pairs,type){
+  const el=document.getElementById(id);
+  el.innerHTML="";
 
   pairs.forEach(pair=>{
-    const div = document.createElement("div");
+    const div=document.createElement("div");
     div.className="card";
-
-    const img = document.createElement("img");
-    img.src = pair[0];
+    const img=document.createElement("img");
+    img.src=pair[0];
 
     let opened=false;
 
@@ -155,7 +187,7 @@ function renderCards(id, pairs, type){
       if(type==="A" && selectedA.length>=5) return alert("ครบ 5 ใบ");
       if(type==="C" && selectedC.length>=5) return alert("ครบ 5 ใบ");
 
-      img.src = pair[1];
+      img.src=pair[1];
       opened=true;
 
       if(type==="A") selectedA.push(pair[1]);
@@ -178,10 +210,10 @@ function goSelect(){
   document.getElementById("game").style.display="none";
   document.getElementById("selectOne").style.display="block";
 
-  const el = document.getElementById("selectedCards");
-  el.innerHTML = "";
+  const el=document.getElementById("selectedCards");
+  el.innerHTML="";
 
-  [...selectedA, ...selectedC].forEach(src=>{
+  [...selectedA,...selectedC].forEach(src=>{
     const img=document.createElement("img");
     img.src=src;
     img.className="card";
@@ -198,7 +230,7 @@ function goSelect(){
 
 // ===== SUBMIT =====
 function submitData(){
-  fetch("https://script.google.com/macros/s/AKfycbziZkTqcrFOofA9F8e1Bj3cnzk8UfcDxpmRaUK2vjgvI-RGEdhcEx8FGYw_AEIClLYMnQ/exec",{
+  fetch(SCRIPT_URL,{
     method:"POST",
     body:JSON.stringify({
       name:document.getElementById("name").value,
@@ -208,10 +240,13 @@ function submitData(){
       acceptance:selectedA,
       commitment:selectedC
     })
-  }).then(()=>{
+  })
+  .then(res=>res.text())
+  .then(()=>{
     document.getElementById("interview").style.display="none";
     document.getElementById("thankyou").style.display="block";
-  }).catch(()=>{
+  })
+  .catch(()=>{
     alert("ส่งข้อมูลไม่สำเร็จ");
   });
 }
@@ -220,22 +255,3 @@ function submitData(){
 
 </body>
 </html>
-
-function doPost(e) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  const data = JSON.parse(e.postData.contents);
-
-  sheet.appendRow([
-    new Date(),
-    data.name,
-    data.q1,
-    data.q2,
-    data.finalCard,
-    JSON.stringify(data.acceptance),
-    JSON.stringify(data.commitment)
-  ]);
-
-  return ContentService
-    .createTextOutput(JSON.stringify({status:"success"}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
