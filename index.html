@@ -243,3 +243,92 @@ function submitData(){
 
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>FlexMind Cards</title>
+
+<style>
+body { font-family:sans-serif; text-align:center; background:#f7f5f2; }
+.cards { display:flex; flex-wrap:wrap; justify-content:center; }
+.card { width:100px; height:140px; margin:6px; cursor:pointer; }
+.card img { width:100%; height:100%; object-fit:cover; }
+.selected { border:3px solid green; }
+button { padding:10px 20px; margin-top:20px; }
+</style>
+</head>
+
+<body>
+
+<h1>FlexMind Cards</h1>
+
+<div id="game"></div>
+<div id="form" style="display:none;">
+<input id="name" placeholder="ชื่อ"><br>
+<textarea id="q1" placeholder="คุณเห็นอะไร"></textarea><br>
+<button onclick="send()">ส่ง</button>
+</div>
+
+<script>
+
+// 🔴 URL ของคุณ
+const URL = "https://script.google.com/macros/s/AKfycbwXCTUAngWZLw42hvdvLjjGniU0hWAX5tLajRReCfZ2E-zWljQ7DcmyQ6o_f_sc238z_Q/exec";
+
+// 🔥 ใช้รูปจริงตรง ๆ (ไม่ผ่าน base)
+const cards = [
+["https://i.postimg.cc/GhpPBHQ5/01.jpg","https://i.postimg.cc/8PCdFjHq/02.jpg"],
+["https://i.postimg.cc/fTb73JK1/03.jpg","https://i.postimg.cc/pXdQ9pZG/04.jpg"]
+];
+
+let selected = [];
+
+function start(){
+  const game = document.getElementById("game");
+  game.innerHTML = "";
+
+  cards.forEach(pair=>{
+    const div = document.createElement("div");
+    div.className="card";
+
+    const img = document.createElement("img");
+    img.src = pair[0];
+
+    div.onclick = ()=>{
+      if(selected.length>=1) return;
+
+      img.src = pair[1];
+      selected.push(pair[1]);
+      div.classList.add("selected");
+
+      setTimeout(()=>{
+        document.getElementById("form").style.display="block";
+      },500);
+    };
+
+    div.appendChild(img);
+    game.appendChild(div);
+  });
+}
+
+function send(){
+  fetch(URL,{
+    method:"POST",
+    mode:"no-cors",
+    body:JSON.stringify({
+      name:document.getElementById("name").value,
+      q1:document.getElementById("q1").value,
+      card:selected[0]
+    })
+  });
+
+  alert("ส่งแล้ว");
+}
+
+start();
+
+</script>
+
+</body>
+</html>
