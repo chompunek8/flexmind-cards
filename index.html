@@ -1,113 +1,3 @@
-<style>
-body {
-  font-family: "Prompt", sans-serif;
-  background: #f7f5f2;
-  margin: 0;
-  padding: 20px;
-  text-align: center;
-  color: #333;
-}
-
-/* container */
-#app {
-  max-width: 900px;
-  margin: auto;
-}
-
-/* headings */
-h1 {
-  font-size: 28px;
-  margin-bottom: 10px;
-}
-
-h2 {
-  margin-top: 30px;
-  color: #555;
-}
-
-/* text */
-p {
-  color: #777;
-  line-height: 1.6;
-}
-
-/* card layout */
-#acceptance, #commitment, #selectedCards {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-}
-
-/* card */
-.card {
-  width: 100px;
-  height: 140px;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* selected */
-.card.selected {
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-  border: 3px solid #6c9a8b;
-}
-
-/* button */
-button {
-  background: #6c9a8b;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 20px;
-  font-size: 16px;
-  margin-top: 20px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  background: #5a8578;
-}
-
-/* input */
-input, textarea {
-  width: 80%;
-  max-width: 400px;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  font-family: inherit;
-}
-
-textarea {
-  height: 80px;
-}
-
-/* section card */
-#welcome, #interview, #thankyou {
-  background: white;
-  padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-}
-</style>
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -115,235 +5,160 @@ textarea {
 <title>FlexMind Cards</title>
 
 <style>
-body {
-  font-family: sans-serif;
-  background: #f7f5f2;
-  text-align: center;
-  padding: 20px;
-}
-
-#app { max-width: 900px; margin: auto; }
-
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.card {
-  width: 265px;
-  height: 454px;
-  margin: 6px;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  transition: .2s;
-}
-
-.card:hover { transform: translateY(-5px); }
-
-.card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.selected {
-  border: 3px solid #6c9a8b;
-  transform: scale(1.05);
-}
-
-button {
-  padding: 10px 20px;
-  border-radius: 20px;
-  border: none;
-  background: #6c9a8b;
-  color: white;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-input, textarea {
-  width: 80%;
-  margin: 10px;
-  padding: 10px;
-}
+body { font-family:sans-serif; background:#f7f5f2; text-align:center; }
+.cards { display:flex; flex-wrap:wrap; justify-content:center; }
+.card { width:100px; height:140px; margin:6px; cursor:pointer; }
+.card img { width:100%; height:100%; object-fit:cover; }
+.selected { border:3px solid green; }
+button { padding:10px 20px; margin-top:20px; }
 </style>
-
 </head>
-<body>
 
-<div id="app">
+<body>
 
 <!-- WELCOME -->
 <div id="welcome">
-  <h1>FlexMind Cards</h1>
-  <p>ไม่มีคำตอบที่ผิด ทุกความรู้สึกมีความหมาย</p>
-  <p>เลือกไพ่หมวดละ 5 ใบ → เลือก 1 ใบที่กระทบใจที่สุด → สะท้อนตัวเอง</p>
-  <button onclick="startGame()">เริ่มเล่น</button>
+<h1>FlexMind Cards</h1>
+<p>ไม่มีคำตอบที่ผิด และไม่ต้องฝืนใจตัวเอง</p>
+<button onclick="startGame()">เริ่มเล่น</button>
 </div>
 
 <!-- GAME -->
 <div id="game" style="display:none;">
-  <h2>Acceptance (เลือก 5 ใบ)</h2>
-  <div id="acceptance" class="cards"></div>
+<h2>Acceptance (เลือก 5 ใบ)</h2>
+<div id="acceptance" class="cards"></div>
 
-  <h2>Commitment (เลือก 5 ใบ)</h2>
-  <div id="commitment" class="cards"></div>
+<h2>Commitment (เลือก 5 ใบ)</h2>
+<div id="commitment" class="cards"></div>
 
-  <button id="nextBtn" style="display:none;" onclick="goSelect()">ถัดไป</button>
+<button id="nextBtn" style="display:none;" onclick="goSelect()">ถัดไป</button>
 </div>
 
 <!-- SELECT -->
 <div id="select" style="display:none;">
-  <h2>เลือก 1 ใบที่กระทบใจที่สุด</h2>
-  <div id="selectedCards" class="cards"></div>
+<h2>เลือก 1 ใบที่กระทบใจที่สุด</h2>
+<div id="selectedCards" class="cards"></div>
 </div>
 
 <!-- INTERVIEW -->
 <div id="interview" style="display:none;">
-  <h2>สะท้อนตัวเอง</h2>
-  <input id="name" placeholder="ชื่อ"><br>
-  <textarea id="q1" placeholder="คุณสังเกตอะไร"></textarea><br>
-  <textarea id="q2" placeholder="คุณจะทำอะไรต่อ"></textarea><br>
-  <button onclick="submitData()">ส่งข้อมูล</button>
+<h2>สะท้อนตัวเอง</h2>
+<input id="name" placeholder="ชื่อ"><br>
+<textarea id="q1" placeholder="การ์ดสะท้อนอะไร"></textarea><br>
+<textarea id="q2" placeholder="คุณจะทำอะไรต่อ"></textarea><br>
+<button onclick="submitData()">ส่งข้อมูล</button>
 </div>
 
 <!-- THANK -->
 <div id="thank" style="display:none;">
-  <h2>ขอบคุณ</h2>
-</div>
-
+<h2>ขอบคุณ</h2>
 </div>
 
 <script>
 
+// 🔴 Google Sheets URL
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXCTUAngWZLw42hvdvLjjGniU0hWAX5tLajRReCfZ2E-zWljQ7DcmyQ6o_f_sc238z_Q/exec";
+
 // ===== DATA =====
-const acceptancePairs = 
+const A = [
 ["https://i.postimg.cc/GhpPBHQ5/01.jpg","https://i.postimg.cc/8PCdFjHq/02.jpg"],
 ["https://i.postimg.cc/fTb73JK1/03.jpg","https://i.postimg.cc/pXdQ9pZG/04.jpg"],
 ["https://i.postimg.cc/QxMgBHmL/05.jpg","https://i.postimg.cc/651rCtjH/06.jpg"],
 ["https://i.postimg.cc/DyYr1njY/07.jpg","https://i.postimg.cc/651rCtjD/08.jpg"],
-["https://i.postimg.cc/CL6GbSrp/09.jpg","https://i.postimg.cc/DyYr1np7/10.jpg"],
-["https://i.postimg.cc/WbfG0TYz/11.jpg","https://i.postimg.cc/BQwT247L/12.jpg"],
-["https://i.postimg.cc/13npH2bR/13.jpg","https://i.postimg.cc/t4Zh5w8J/14.jpg"],
-["https://i.postimg.cc/mgzQwJKP/15.jpg","https://i.postimg.cc/qvh8LSW6/16.jpg"],
-["https://i.postimg.cc/XYGw8mtF/17.jpg","https://i.postimg.cc/kg6xczLN/18.jpg"],
-["https://i.postimg.cc/mgzQwJKS/19.jpg","https://i.postimg.cc/13npH2bM/20.jpg"],
-["https://i.postimg.cc/DwJqgHRx/21.jpg","https://i.postimg.cc/t4KFmDHF/22.jpg"],
-["https://i.postimg.cc/13kDYMZK/23.jpg","https://i.postimg.cc/52h8kpMg/24.jpg"],
-["https://i.postimg.cc/XYR9Dx02/25.jpg","https://i.postimg.cc/fRGYg5hq/26.jpg"],
-["https://i.postimg.cc/pLwK1kHN/27.jpg","https://i.postimg.cc/jSpykvb0/28.jpg"],
-["https://i.postimg.cc/K86tsQ2x/29.jpg","https://i.postimg.cc/TPnn8mRZ/30.jpg"]
+["https://i.postimg.cc/CL6GbSrp/09.jpg","https://i.postimg.cc/DyYr1np7/10.jpg"]
 ];
 
-const commitmentPairs = [
+const C = [
 ["https://i.postimg.cc/hGVVFxDc/31.jpg","https://i.postimg.cc/MG11kR6Z/32.jpg"],
 ["https://i.postimg.cc/nLqq87FM/33.jpg","https://i.postimg.cc/N0RRhTs9/34.jpg"],
 ["https://i.postimg.cc/5t88cv4C/35.jpg","https://i.postimg.cc/FRm3hRzz/36.jpg"],
 ["https://i.postimg.cc/tTyW9TJY/37.jpg","https://i.postimg.cc/26mhC6yL/38.jpg"],
-["https://i.postimg.cc/76D0q6hT/39.jpg","https://i.postimg.cc/MTxVzTH7/40.jpg"],
-["https://i.postimg.cc/FRm3hRzb/41.jpg","https://i.postimg.cc/qR0ypRqL/42.jpg"],
-["https://i.postimg.cc/d1vrJ136/43.jpg","https://i.postimg.cc/HxHXTxn3/44.jpg"],
-["https://i.postimg.cc/4dZVXdy8/45.jpg","https://i.postimg.cc/JnmZRn06/46.jpg"],
-["https://i.postimg.cc/Tw9m165c/47.jpg","https://i.postimg.cc/XJ3dnJqz/48.jpg"],
-["https://i.postimg.cc/pTZ8rH54/49.jpg","https://i.postimg.cc/RFRfhBJs/50.jpg"],
-["https://i.postimg.cc/bJTbrhSK/51.jpg","https://i.postimg.cc/ZRc3nSyS/52.jpg"],
-["https://i.postimg.cc/zvGhRcn8/53.jpg","https://i.postimg.cc/zvGhRcnL/54.jpg"],
-["https://i.postimg.cc/C5x8fQjq/55.jpg","https://i.postimg.cc/2ySWBK4h/56.jpg"],
-["https://i.postimg.cc/C5x8fQjH/57.jpg","https://i.postimg.cc/PJVwbQ4w/58.jpg"],
-["https://i.postimg.cc/sxHhP4cS/59.jpg","https://i.postimg.cc/RhpH1LRw/60.jpg"]
+["https://i.postimg.cc/76D0q6hT/39.jpg","https://i.postimg.cc/MTxVzTH7/40.jpg"]
 ];
 
-const base = "https://i.postimg.cc/";
-
-let selA=[], selC=[], final="";
+let selA=[], selC=[], finalCard="";
 
 // ===== START =====
 function startGame(){
-  document.getElementById("welcome").style.display="none";
-  document.getElementById("game").style.display="block";
-
-  render("acceptance",A,selA);
-  render("commitment",C,selC);
+document.getElementById("welcome").style.display="none";
+document.getElementById("game").style.display="block";
+render("acceptance",A,selA);
+render("commitment",C,selC);
 }
 
 // ===== RENDER =====
 function render(id,data,store){
-  const el=document.getElementById(id);
-  el.innerHTML="";
+const el=document.getElementById(id);
+el.innerHTML="";
 
-  data.forEach(pair=>{
-    const div=document.createElement("div");
-    div.className="card";
+data.forEach(pair=>{
+const div=document.createElement("div");
+div.className="card";
 
-    const img=document.createElement("img");
-    img.src=base+pair[0];
+const img=document.createElement("img");
+img.src=pair[0];
 
-    let open=false;
+let open=false;
 
-    div.onclick=()=>{
-      if(open || store.length>=5) return;
+div.onclick=()=>{
+if(open || store.length>=5) return;
 
-      img.src=base+pair[1];
-      open=true;
-      store.push(base+pair[1]);
-      div.classList.add("selected");
+img.src=pair[1];
+open=true;
+store.push(pair[1]);
+div.classList.add("selected");
 
-      if(selA.length===5 && selC.length===5){
-        document.getElementById("nextBtn").style.display="block";
-      }
-    };
+if(selA.length===5 && selC.length===5){
+document.getElementById("nextBtn").style.display="block";
+}
+};
 
-    div.appendChild(img);
-    el.appendChild(div);
-  });
+div.appendChild(img);
+el.appendChild(div);
+});
 }
 
 // ===== SELECT =====
 function goSelect(){
-  document.getElementById("game").style.display="none";
-  document.getElementById("select").style.display="block";
+document.getElementById("game").style.display="none";
+document.getElementById("select").style.display="block";
 
-  const el=document.getElementById("selectedCards");
-  el.innerHTML="";
+const el=document.getElementById("selectedCards");
+el.innerHTML="";
 
-  [...selA,...selC].forEach(src=>{
-    const img=document.createElement("img");
-    img.src=src;
-    img.className="card";
+[...selA,...selC].forEach(src=>{
+const img=document.createElement("img");
+img.src=src;
+img.className="card";
 
-    img.onclick=()=>{
-      final=src;
-      document.getElementById("select").style.display="none";
-      document.getElementById("interview").style.display="block";
-    };
+img.onclick=()=>{
+finalCard=src;
+document.getElementById("select").style.display="none";
+document.getElementById("interview").style.display="block";
+};
 
-    el.appendChild(img);
-  });
+el.appendChild(img);
+});
 }
 
 // ===== SUBMIT =====
 function submitData(){
 
-  const data={
-    name:document.getElementById("name").value,
-    q1:document.getElementById("q1").value,
-    q2:document.getElementById("q2").value,
-    final,
-    A:selA,
-    C:selC
-  };
+fetch(SCRIPT_URL,{
+method:"POST",
+mode:"no-cors",
+body:JSON.stringify({
+name:document.getElementById("name").value,
+q1:document.getElementById("q1").value,
+q2:document.getElementById("q2").value,
+finalCard,
+acceptance:selA,
+commitment:selC
+})
+});
 
-  fetch(SCRIPT_URL,{
-    method:"POST",
-    mode:"no-cors",
-    body:JSON.stringify(data)
-  });
-
-  document.getElementById("interview").style.display="none";
-  document.getElementById("thank").style.display="block";
+document.getElementById("interview").style.display="none";
+document.getElementById("thank").style.display="block";
 }
 
 </script>
