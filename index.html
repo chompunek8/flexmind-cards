@@ -1,43 +1,3 @@
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<title>FlexMind Cards</title>
-
-<style>
-body {
-  font-family: "Prompt", sans-serif;
-  background: #f7f5f2;
-  margin: 0;
-  padding: 20px;
-  text-align: center;
-}
-
-#app {
-  max-width: 900px;
-  margin: auto;
-}
-
-#acceptance, #commitment, #selectedCards {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.card {
-  width: 265px;
-  height: 454px;
-  margin: 6px;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: 0.2s;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-  
 <div id="app">
 
 <!-- WELCOME -->
@@ -61,32 +21,7 @@ body {
   </button>
 </div>
 
-<!-- SELECT 1 CARD -->
-<div id="selectOne" style="display:none;">
-  <h2>เลือก 1 ใบที่กระทบใจที่สุด</h2>
-  <div id="selectedCards"></div>
-</div>
-
-<!-- INTERVIEW -->
-<div id="interview" style="display:none;">
-  <h2>สะท้อนตัวเอง</h2>
-
-  <input id="name" placeholder="ชื่อ" />
-  <textarea id="q1" placeholder="การ์ดใบนี้สะท้อนอะไรในตัวคุณ"></textarea>
-  <textarea id="q2" placeholder="คุณจะนำไปใช้ในชีวิตจริงอย่างไร"></textarea>
-
-  <button onclick="submitData()">ส่งข้อมูล</button>
-</div>
-
-<!-- THANK YOU -->
-<div id="thankyou" style="display:none;">
-  <h2>ขอบคุณ</h2>
-  <p>คุณได้ก้าวหนึ่งในการเข้าใจตัวเอง</p>
-</div>
-
-</div>
-
-body {
+  body {
   text-align: center;
   font-family: sans-serif;
 }
@@ -114,7 +49,7 @@ body {
   border: 3px solid green;
 }
 
-// ===== DATA =====
+  // ===== DATA =====
 const acceptancePairs = [
 ["https://i.postimg.cc/GhpPBHQ5/01.jpg","https://i.postimg.cc/8PCdFjHq/02.jpg"],
 ["https://i.postimg.cc/fTb73JK1/03.jpg","https://i.postimg.cc/pXdQ9pZG/04.jpg"],
@@ -147,97 +82,3 @@ const commitmentPairs = [
 ["https://i.postimg.cc/bJTbrhSK/51.jpg","https://i.postimg.cc/ZRc3nSyS/52.jpg"],
 ["https://i.postimg.cc/zvGhRcn8/53.jpg","https://i.postimg.cc/zvGhRcnL/54.jpg"],
 ["https://i.postimg.cc/C5x8fQjq/55.jpg","https://i.postimg.cc/2ySWBK4h/56.jpg"],
-["https://i.postimg.cc/C5x8fQjH/57.jpg","https://i.postimg.cc/PJVwbQ4w/58.jpg"],
-["https://i.postimg.cc/sxHhP4cS/59.jpg","https://i.postimg.cc/RhpH1LRw/60.jpg"]
-];
-
-let selectedA = [];
-let selectedC = [];
-let finalCard = "";
-
-// ===== NAV =====
-function startGame(){
-  document.getElementById("welcome").style.display="none";
-  document.getElementById("game").style.display="block";
-}
-
-// ===== RENDER =====
-function renderCards(id, pairs, type){
-  const el = document.getElementById(id);
-
-  pairs.forEach(pair=>{
-    const div=document.createElement("div");
-    div.className="card";
-
-    const img=document.createElement("img");
-    img.src=pair[0];
-
-    let opened=false;
-
-    div.onclick=()=>{
-      if(opened) return;
-
-      if(type==="A" && selectedA.length>=5) return alert("ครบ 5 ใบ");
-      if(type==="C" && selectedC.length>=5) return alert("ครบ 5 ใบ");
-
-      img.src=pair[1];
-      opened=true;
-
-      if(type==="A") selectedA.push(pair[1]);
-      else selectedC.push(pair[1]);
-
-      div.classList.add("selected");
-
-      if(selectedA.length===5 && selectedC.length===5){
-        document.getElementById("goSelect").style.display="block";
-      }
-    };
-
-    div.appendChild(img);
-    el.appendChild(div);
-  });
-}
-
-renderCards("acceptance",acceptancePairs,"A");
-renderCards("commitment",commitmentPairs,"C");
-
-// ===== SELECT 1 =====
-function goSelect(){
-  document.getElementById("game").style.display="none";
-  document.getElementById("selectOne").style.display="block";
-
-  const all=[...selectedA,...selectedC];
-  const el=document.getElementById("selectedCards");
-
-  all.forEach(src=>{
-    const img=document.createElement("img");
-    img.src=src;
-    img.className="card";
-
-    img.onclick=()=>{
-      finalCard=src;
-      document.getElementById("selectOne").style.display="none";
-      document.getElementById("interview").style.display="block";
-    };
-
-    el.appendChild(img);
-  });
-}
-
-// ===== SUBMIT =====
-function submitData(){
-  fetch("https://script.google.com/macros/s/AKfycbxcimSrghE_dF3aKh3eA_c-Fv1_Fk81fCeiHotkVLtGrmZapQq4tXF0U4iAxuEIgAQ1qA/exec",{
-    method:"POST",
-    body:JSON.stringify({
-      name:document.getElementById("name").value,
-      q1:document.getElementById("q1").value,
-      q2:document.getElementById("q2").value,
-      finalCard,
-      acceptance:selectedA,
-      commitment:selectedC
-    })
-  }).then(()=>{
-    document.getElementById("interview").style.display="none";
-    document.getElementById("thankyou").style.display="block";
-  });
-}
